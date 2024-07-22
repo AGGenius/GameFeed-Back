@@ -1,5 +1,6 @@
 const client = require('../db.js');
 const bcryp = require('bcrypt');
+const cors = require('cors');
 const jwt = require('jsonwebtoken');
 
 exports.getUser = async (req, res) => {
