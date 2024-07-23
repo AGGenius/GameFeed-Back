@@ -11,6 +11,7 @@ const port = 3000;
 
 app.use(cors());
 app.use(bodyParser.json());
+
 app.use('/api/games', gameRoutes);
 app.use('/api/users', userRoutes);
 
