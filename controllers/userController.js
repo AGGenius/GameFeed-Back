@@ -2,6 +2,18 @@ const client = require('../db.js');
 const bcryp = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+const getUsers = async (req, res) => {
+    try {
+        const result = await client.query('SELECT * FROM users');      
+        let users = result.rows;
+        users.forEach(user => delete user.password)
+
+        res.json(users);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
 const getUser = async (req, res) => {
     try {
         const { id } = req.params;
@@ -52,7 +64,7 @@ const loginUser = async (req, res) => {
         const verifiedUser = await bcryp.compare(password, user.password);
 
         if (!verifiedUser) {
-            return res.status(400).json({ error: 'contraseña incorrecta' });
+            return res.status(400).json({ error: 'contraseña incorrecta' }); //Mejor una respuesta ambigua
         }
 
         const token = jwt.sign({ id: user.id, email: user.email }, "secreto", { expiresIn: '1h' });
@@ -63,4 +75,4 @@ const loginUser = async (req, res) => {
 }
 
 
-module.exports = { getUser, loginUser, registerUser }
+module.exports = { getUsers, getUser, loginUser, registerUser }
