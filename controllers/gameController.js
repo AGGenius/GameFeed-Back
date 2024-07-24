@@ -1,4 +1,5 @@
 const client = require('../db.js');
+const {createLike} = require('./likesController.js')
 
 const createGame = async (req, res) => { 
     try {
@@ -7,7 +8,8 @@ const createGame = async (req, res) => {
         const gameCheck = await client.query('SELECT * FROM games WHERE tittle = $1', [tittle]);
 
         if (gameCheck.rows.length === 0) {
-            await client.query(`INSERT INTO games (tittle, genre, developer, release, user_id) VALUES ($1, $2, $3, $4, $5)`, [tittle, genre, developer, release, user_id]);
+            const newGame = await client.query(`INSERT INTO games (tittle, genre, developer, release, user_id) VALUES ($1, $2, $3, $4, $5) RETURNING id`, [tittle, genre, developer, release, user_id]);           
+            createLike(newGame.rows[0].id, 0)
             res.json({ estado: "Juego creado correctamente"});
         } else {
             res.status(400).json({ error: "Este juego ya existe" }); //Cambiar el codigo.

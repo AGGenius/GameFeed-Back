@@ -1,4 +1,5 @@
 const client = require('../db.js');
+const {createLike} = require('./likesController.js')
 
 const createPost = async (req, res) => { 
     try {
@@ -14,7 +15,8 @@ const createPost = async (req, res) => {
 
         const date = getDate();
 
-        await client.query(`INSERT INTO posts (type, date, content, user_id, game_id) VALUES ($1, $2, $3, $4, $5)`, [ type, date, content, user_id, game_id ]);
+        const newPost = await client.query(`INSERT INTO posts (type, date, content, user_id, game_id) VALUES ($1, $2, $3, $4, $5) RETURNING id`, [ type, date, content, user_id, game_id ]);
+        createLike(game_id, newPost.rows[0].id)
         res.json({ estado: "Post creado correctamente"});
 
     } catch (error) {
