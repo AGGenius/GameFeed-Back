@@ -8,7 +8,7 @@ const createGame = async (req, res) => {
         const gameCheck = await client.query('SELECT * FROM games WHERE tittle = $1', [tittle]);
 
         if (gameCheck.rows.length === 0) {
-            const newGame = await client.query(`INSERT INTO games (tittle, genre, developer, release, user_id) VALUES ($1, $2, $3, $4, $5) RETURNING id`, [tittle, genre, developer, release, user_id]);           
+            const newGame = await client.query(`INSERT INTO games (active, tittle, genre, developer, release, user_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`, [false, tittle, genre, developer, release, user_id]);           
             createLike(newGame.rows[0].id, 0)
             res.json({ estado: "Juego creado correctamente"});
         } else {
@@ -22,7 +22,7 @@ const createGame = async (req, res) => {
 
 const getGames = async (req, res) => { 
     try {
-        const result = await client.query('SELECT * FROM games');
+        const result = await client.query('SELECT * FROM games WHERE id != 0');
         res.json(result.rows);
     } catch (error) {
         res.status(500).json({ error: error.message});

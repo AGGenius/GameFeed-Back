@@ -16,7 +16,7 @@ const createUserLike = async (req, res) => {
         const likeCheck = await client.query('SELECT * FROM userslikes WHERE user_id = $1 AND likes_id = $2', [user_id, likes_id]);
 
         if (likeCheck.rows.length === 0) {
-            await client.query(`INSERT INTO userslikes (user_id, likes_id, active) VALUES ($1, $2, $3)`, [ user_id, likes_id, true]);
+            await client.query(`INSERT INTO userslikes (active, user_id, likes_id) VALUES ($1, $2, $3)`, [true, user_id, likes_id]);
             res.json({ estado: "Like incrementado"});
         } else {
             await client.query('UPDATE userslikes SET active = $3 WHERE user_id = $1 AND likes_id = $2', [user_id, likes_id, !likeCheck.rows[0].active]); //Updatear en un endpoint post?

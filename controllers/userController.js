@@ -39,7 +39,7 @@ const registerUser = async (req, res) => {
 
         if (userCheck.rows.length === 0) {
             const securePassword = await bcryp.hash(password, 10)
-            await client.query(`INSERT INTO users (email, password, name, nick, type, state) VALUES ($1, $2, $3, $4, $5, $6)`, [email, securePassword, name, nick, "user", "inactive"]);
+            await client.query(`INSERT INTO users (active, email, password, name, nick, type) VALUES ($1, $2, $3, $4, $5, $6)`, [false, email, securePassword, name, nick, "user"]);
             res.json({ estado: "Usuario creado correctamente"});
         } else {
             res.status(400).json({ error: "Email ya en uso" }); //Cambiar el codigo.
@@ -67,7 +67,7 @@ const loginUser = async (req, res) => {
             return res.status(400).json({ error: 'contraseña incorrecta' }); //Mejor una respuesta ambigua
         }
 
-        const token = jwt.sign({ id: user.id, email: user.email }, "secreto", { expiresIn: '1h' });
+        const token = jwt.sign({ id: user.id, email: user.email, type: user.type, active: user.active }, "secreto", { expiresIn: '1h' });
         res.json({ token, userId: user.id });
     } catch (error) {
         res.status(500).json({ error: error.message });
