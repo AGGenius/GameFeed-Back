@@ -28,7 +28,7 @@ const getPostsByGameId = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const result = await client.query('SELECT * FROM posts WHERE game_id= $1 AND id != 0', [id]);
+        const result = await client.query('SELECT posts.id, posts.active, posts.type, posts.content, posts.date, posts.user_id, users.nick FROM posts JOIN users ON (posts.user_id = users.id) WHERE game_id= $1 AND posts.id != 0 ORDER BY id', [id]);
         res.json(result.rows);
     } catch (error) {
         res.status(500).json({ error: error.message});

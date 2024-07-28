@@ -22,7 +22,7 @@ const createGame = async (req, res) => {
 
 const getGames = async (req, res) => { 
     try {
-        const result = await client.query('SELECT * FROM games WHERE id != 0');
+        const result = await client.query('SELECT * FROM games WHERE id != 0 ORDER BY id');
         res.json(result.rows);
     } catch (error) {
         res.status(500).json({ error: error.message});

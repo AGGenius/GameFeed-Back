@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 
 const getUsers = async (req, res) => {
     try {
-        const result = await client.query('SELECT * FROM users');      
+        const result = await client.query('SELECT * FROM users ORDER BY id');      
         let users = result.rows;
         users.forEach(user => delete user.password)
 
