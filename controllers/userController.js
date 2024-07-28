@@ -19,17 +19,41 @@ const getUser = async (req, res) => {
         const { id } = req.params;
         const result = await client.query('SELECT * FROM users WHERE id= $1', [id]);
 
-        if (result.rows.length === 0) {
-            return res.status(404).json({ error: 'Usuario no encontrado' });
+        if(result.rows.length > 0) {
+            let user = result.rows[0];
+            delete user.password;
+            res.json(user);
+        } else {
+            res.json({ estado: "Usuario no encontrado"})
         }
-        let user = result.rows[0];
-        delete user.password;
 
-        res.json(user);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 }
+
+const editUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const { email, name, nick, type, active } = req.body;
+
+        await client.query('UPDATE users SET email = $2, name = $3, nick = $4, type = $5, active = $6 WHERE id = $1', [id, email, name, nick, type, active ]);
+        res.json({ estado: "Usuario actualizado correctamente"});
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
+const deletUserById = async (req, res) => { 
+    try {
+        const { id } = req.params;
+        await client.query('DELETE FROM users WHERE id = $1', [id]);
+        res.json({ estado: "Usuario borrado correctamente"});
+    } catch (error) {
+        res.status(500).json({ error: error.message});
+    }
+};
 
 const registerUser = async (req, res) => {
     try {
@@ -75,4 +99,4 @@ const loginUser = async (req, res) => {
 }
 
 
-module.exports = { getUsers, getUser, loginUser, registerUser }
+module.exports = { getUsers, getUser, loginUser, editUser, deletUserById, registerUser }

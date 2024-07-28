@@ -3,7 +3,8 @@ const router = express.Router();
 const postControllers = require('../controllers/postControllers')
 
 
-router.get('/:id', postControllers.getPostsByGameId);
+router.get('/game/:id', postControllers.getPostsByGameId);
+router.get('/:id', postControllers.getPostsById);
 router.put('/:id', postControllers.editPostById);
 router.post('/create', postControllers.createPost);
 router.delete('/:id', postControllers.deletPostById);

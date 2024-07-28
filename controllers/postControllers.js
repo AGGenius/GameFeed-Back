@@ -35,12 +35,28 @@ const getPostsByGameId = async (req, res) => {
     }
 }
 
+const getPostsById = async (req, res) => { 
+    try {
+        const { id } = req.params;
+
+        const result = await client.query('SELECT * FROM posts WHERE id= $1 AND id != 0', [id]);
+
+        if(result.rows.length > 0) {
+            res.json(result.rows);
+        } else {
+            res.json({ estado: "Post no encontrado"})
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message});
+    }
+}
+
 const editPostById = async (req, res) => { 
     try {
         const { id } = req.params;
 
-        const { type, content, user_id, game_id } = req.body;
-        await client.query('UPDATE posts SET type = $2, content = $3, user_id = $4, game_id = $5 WHERE id = $1', [id, type, content, user_id, game_id ]);
+        const { type, content, user_id, game_id, active } = req.body;
+        await client.query('UPDATE posts SET type = $2, content = $3, user_id = $4, game_id = $5, active = $6 WHERE id = $1', [id, type, content, user_id, game_id, active ]);
         res.json({ estado: "Post actualizado correctamente"});
     } catch (error) {
         res.status(500).json({ error: error.message});
@@ -57,4 +73,4 @@ const deletPostById = async (req, res) => {
     }
 };
 
-module.exports = { createPost, getPostsByGameId, editPostById, deletPostById }
+module.exports = { createPost, getPostsByGameId, getPostsById, editPostById, deletPostById }
