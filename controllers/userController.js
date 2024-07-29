@@ -77,18 +77,23 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
+
         const result = await client.query('SELECT * FROM users WHERE email = $1', [email]);
 
         if (result.rows.length === 0) {
-            return res.status(400).json({ error: 'Credenciales incorrectas' });
+            return res.status(401).json({ estado: 'Credenciales incorrectas' });
         }
 
         const user = result.rows[0];
 
+        if (!user.active) {
+            return res.status(401).json({ estado: 'Usuario inactivo' }); 
+        }
+
         const verifiedUser = await bcryp.compare(password, user.password);
 
         if (!verifiedUser) {
-            return res.status(400).json({ error: 'contraseña incorrecta' }); //Mejor una respuesta ambigua
+            return res.status(401).json({ estado: 'Credenciales incorrectas' }); //Mejor una respuesta ambigua
         }
 
         const token = jwt.sign({ id: user.id, email: user.email, type: user.type, active: user.active }, "secreto", { expiresIn: '1h' });

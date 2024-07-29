@@ -28,7 +28,18 @@ const getPostsByGameId = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const result = await client.query('SELECT posts.id, posts.active, posts.type, posts.content, posts.date, posts.user_id, users.nick FROM posts JOIN users ON (posts.user_id = users.id) WHERE game_id= $1 AND posts.id != 0 ORDER BY id', [id]);
+        const result = await client.query('SELECT posts.id, posts.active, posts.type, posts.content, posts.date, posts.user_id, users.nick FROM posts JOIN users ON (posts.user_id = users.id) WHERE game_id= $1 AND posts.id != 0 AND posts.active = true ORDER BY id', [id]);
+        res.json(result.rows);
+    } catch (error) {
+        res.status(500).json({ error: error.message});
+    }
+}
+
+const getPostPaged = async (req, res) => { 
+    try {
+        const { id, page } = req.params;
+
+        const result = await client.query('SELECT posts.id, posts.active, posts.type, posts.content, posts.date, posts.user_id, users.nick FROM posts JOIN users ON (posts.user_id = users.id) WHERE game_id= $1 AND posts.id != 0 AND posts.active = true ORDER BY id LIMIT 5 OFFSET (5 * ($2 - 1))', [id, page]);
         res.json(result.rows);
     } catch (error) {
         res.status(500).json({ error: error.message});
@@ -73,4 +84,4 @@ const deletPostById = async (req, res) => {
     }
 };
 
-module.exports = { createPost, getPostsByGameId, getPostsById, editPostById, deletPostById }
+module.exports = { createPost, getPostsByGameId, getPostPaged, getPostsById, editPostById, deletPostById }
