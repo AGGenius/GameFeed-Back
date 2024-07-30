@@ -29,23 +29,27 @@ const getGames = async (req, res) => {
     }
 }
 
-const getGamesPaged = async (req, res) => {
+const getGamesByFilter = async (req, res) => {
     try {
-        const { page } = req.params;
+        const { page, genreFilter, rowFilter, orderFilter } = req.body;
+        let result;
+        let newfilter;
+        let baseQuery;
 
-        const result = await client.query('SELECT * FROM games WHERE id != 0 AND active = true ORDER BY id LIMIT 5 OFFSET (5 * ($1 - 1))', [page]);
-        res.json(result.rows);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-}
+        if (genreFilter) {
+            newfilter = `%${genreFilter}%`;
+        } else {
+            newfilter = `%%`;
+        }
 
-const getGamesPagedFilter = async (req, res) => {
-    try {
-        const { page, filter } = req.params;
-        const newfilter = `%${filter}%`;
+        if (orderFilter === "ASC") {
+            baseQuery = `SELECT * FROM games WHERE genre ILIKE $1 AND id != 0 AND active = true ORDER BY ${rowFilter} ASC LIMIT 5 OFFSET (5 * ($2 - 1))`
+        } else if (orderFilter === "DESC") {
+            baseQuery = `SELECT * FROM games WHERE genre ILIKE $1 AND id != 0 AND active = true ORDER BY ${rowFilter} DESC LIMIT 5 OFFSET (5 * ($2 - 1))`
+        }
 
-        const result = await client.query('SELECT * FROM games WHERE genre ILIKE $1 AND id != 0 AND active = true ORDER BY id LIMIT 5 OFFSET (5 * ($2 - 1))', [newfilter, page]);
+        result = await client.query(baseQuery, [newfilter, page]);
+
         res.json(result.rows);
 
     } catch (error) {
@@ -109,4 +113,4 @@ const deletGameById = async (req, res) => {
     }
 };
 
-module.exports = { createGame, getGames, getGamesPaged, getGamesPagedFilter, getGameById, getGameByTittle, editGameById, deletGameById }
+module.exports = { createGame, getGames, getGamesByFilter, getGameById, getGameByTittle, editGameById, deletGameById }

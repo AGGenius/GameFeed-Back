@@ -15,7 +15,7 @@ const createPost = async (req, res) => {
 
         const date = getDate();
 
-        const newPost = await client.query(`INSERT INTO posts (active, type, date, content, user_id, game_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`, [true, type, date, content, user_id, game_id ]);
+        const newPost = await client.query(`INSERT INTO posts (active, post_type, date, content, user_id, game_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`, [true, type, date, content, user_id, game_id ]);
         createLike(game_id, newPost.rows[0].id)
         res.json({ estado: "Post creado correctamente"});
 
@@ -28,21 +28,44 @@ const getPostsByGameId = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const result = await client.query('SELECT posts.id, posts.active, posts.type, posts.content, posts.date, posts.user_id, users.nick FROM posts JOIN users ON (posts.user_id = users.id) WHERE game_id= $1 AND posts.id != 0 AND posts.active = true ORDER BY id', [id]);
+        const result = await client.query('SELECT posts.id, posts.active, posts.post_type, posts.content, posts.date, posts.user_id, users.nick FROM posts JOIN users ON (posts.user_id = users.id) WHERE game_id= $1 AND posts.id != 0 AND posts.active = true ORDER BY id', [id]);
         res.json(result.rows);
     } catch (error) {
         res.status(500).json({ error: error.message});
     }
 }
 
-const getPostPaged = async (req, res) => { 
+const getPostByFilter = async (req, res) => {
     try {
-        const { id, page } = req.params;
+        const { id, page, typeFilter, rowFilter, orderFilter } = req.body;
+        let result;
+        let newfilter;
+        let baseQuery;
 
-        const result = await client.query('SELECT posts.id, posts.active, posts.type, posts.content, posts.date, posts.user_id, users.nick FROM posts JOIN users ON (posts.user_id = users.id) WHERE game_id= $1 AND posts.id != 0 AND posts.active = true ORDER BY id LIMIT 5 OFFSET (5 * ($2 - 1))', [id, page]);
+        if (typeFilter) {
+            newfilter = `%${typeFilter}%`;
+        } else {
+            newfilter = `%%`;
+        }
+
+        if (orderFilter === "ASC") {
+            baseQuery = `SELECT posts.id, posts.active, posts.post_type, posts.content, posts.date, posts.user_id, users.nick 
+            FROM posts JOIN users ON (posts.user_id = users.id) 
+            WHERE post_type ILIKE $1 AND game_id= $2 AND posts.id != 0 AND posts.active = true 
+            ORDER BY ${rowFilter} ASC LIMIT 5 OFFSET (5 * ($3 - 1))`;
+        } else if (orderFilter === "DESC") {
+            baseQuery = `SELECT posts.id, posts.active, posts.post_type, posts.content, posts.date, posts.user_id, users.nick 
+            FROM posts JOIN users ON (posts.user_id = users.id) 
+            WHERE post_type ILIKE $1 AND game_id= $2 AND posts.id != 0 AND posts.active = true 
+            ORDER BY ${rowFilter} DESC LIMIT 5 OFFSET (5 * ($3 - 1))`;
+        }
+
+        result = await client.query(baseQuery, [newfilter, id, page]);
+
         res.json(result.rows);
+
     } catch (error) {
-        res.status(500).json({ error: error.message});
+        res.status(500).json({ error: error.message });
     }
 }
 
@@ -66,8 +89,8 @@ const editPostById = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const { type, content, user_id, game_id, active } = req.body;
-        await client.query('UPDATE posts SET type = $2, content = $3, user_id = $4, game_id = $5, active = $6 WHERE id = $1', [id, type, content, user_id, game_id, active ]);
+        const { post_type, content, user_id, game_id, active } = req.body;
+        await client.query('UPDATE posts SET post_type = $2, content = $3, user_id = $4, game_id = $5, active = $6 WHERE id = $1', [id, post_type, content, user_id, game_id, active ]);
         res.json({ estado: "Post actualizado correctamente"});
     } catch (error) {
         res.status(500).json({ error: error.message});
@@ -84,4 +107,4 @@ const deletPostById = async (req, res) => {
     }
 };
 
-module.exports = { createPost, getPostsByGameId, getPostPaged, getPostsById, editPostById, deletPostById }
+module.exports = { createPost, getPostsByGameId, getPostByFilter, getPostsById, editPostById, deletPostById }

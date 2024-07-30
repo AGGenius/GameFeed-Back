@@ -5,8 +5,7 @@ const gameController = require('../controllers/gameController');
 
 router.get('/', gameController.getGames);
 router.get('/:id', gameController.getGameById);
-router.get('/page/:page', gameController.getGamesPaged);
-router.get('/page/:page/:filter', gameController.getGamesPagedFilter);
+router.post('/filter', gameController.getGamesByFilter);
 router.get('/tittle/:tittle', gameController.getGameByTittle);
 router.put('/:id', gameController.editGameById);
 router.post('/create', gameController.createGame);
