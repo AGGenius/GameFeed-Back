@@ -26,7 +26,7 @@ const getGameById = async (req, res) => {
 };
 
 const getGamesByFilter = async (req, res) => {
-    const { page, genreFilter, rowFilter, orderFilter } = req.body;
+    const { page, genreFilter, rowFilter, orderFilter } = req.query;
     let newfilter;
     let baseQuery;
 
@@ -43,7 +43,6 @@ const getGamesByFilter = async (req, res) => {
     }
 
     const result = await client.query(baseQuery, [newfilter, page]);
-
     res.json(result.rows);
 }
 

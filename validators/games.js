@@ -1,4 +1,4 @@
-const { param, body } = require('express-validator');
+const { param, body, query } = require('express-validator');
 const client = require('../db.js');
 
 const genres = [
@@ -29,7 +29,7 @@ const genres = [
     "terror",
     "gacha",
     "casual"
-]
+];
 
 const rows = [
     "id",
@@ -112,8 +112,8 @@ const newGameBodySchema = [
         .trim()
         .notEmpty()
         .withMessage('Date of release is required.')
-        .isDate()
-        .withMessage('Date of release must be a date format like: YYYY-MM-DD.'),
+        .isDate({ format: "DD-MM-YYYY" })
+        .withMessage('Date of release must be a date format like: DD-MM-YYYY.'),
     body('user_id')
         .escape()
         .trim()
@@ -149,8 +149,8 @@ const editGameSchema = [
         .trim()
         .notEmpty()
         .withMessage('Date of release is required.')
-        .isDate()
-        .withMessage('Date of release must be a date format like: YYYY-MM-DD.'),
+        .isDate({ format: "DD-MM-YYYY" })
+        .withMessage('Date of release must be a date format like: DD-MM-YYYY.'),
     body('user_id')
         .escape()
         .trim()
@@ -166,20 +166,20 @@ const editGameSchema = [
 ];
 
 const filterGameSchema = [
-    body('page')
+    query('page')
         .escape()
         .trim()
         .notEmpty()
         .withMessage('Page name is required.')
         .isInt({ min: 1 })
         .withMessage('Page must be a number and greater than 0.'),
-    body('genreFilter')
+    query('genreFilter')
         .escape()
         .trim()
-        .isLength({max: 25 })
+        .isLength({ max: 25 })
         .withMessage('Game genre must not exceed 25 characters.')
         .custom(validGenre),
-    body('rowFilter')
+    query('rowFilter')
         .escape()
         .trim()
         .notEmpty()
@@ -187,7 +187,7 @@ const filterGameSchema = [
         .isLength({ max: 10 })
         .withMessage('validRow must not exceed 10 characters.')
         .custom(validRow),
-    body('orderFilter')
+    query('orderFilter')
         .escape()
         .trim()
         .notEmpty()

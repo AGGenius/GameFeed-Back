@@ -9,7 +9,7 @@ const getPostsByGameId = async (req, res) => {
 }
 
 const getPostByFilter = async (req, res) => {
-    const { id, page, typeFilter, rowFilter, orderFilter } = req.body;
+    const { id, page, typeFilter, rowFilter, orderFilter } = req.query;
     let newfilter;
     let baseQuery;
 
@@ -32,7 +32,6 @@ const getPostByFilter = async (req, res) => {
     }
 
     const result = await client.query(baseQuery, [newfilter, id, page]);
-
     res.json(result.rows);
 }
 

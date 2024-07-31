@@ -1,4 +1,4 @@
-const { param, body } = require('express-validator');
+const { param, body, query } = require('express-validator');
 const client = require('../db.js');
 
 const postTypes = [
@@ -43,27 +43,27 @@ const idParamSchema = [
 ];
 
 const filterPostsSchema = [
-    body('id')
+    query('id')
         .escape()
         .trim()
         .notEmpty()
         .withMessage('Game id is required.')
         .isInt({ min: 1 })
         .withMessage('Id must be a number and greater than 0.'),
-    body('page')
+    query('page')
         .escape()
         .trim()
         .notEmpty()
         .withMessage('Page name is required.')
         .isInt({ min: 1 })
         .withMessage('Page must be a number and greater than 0.'),
-    body('typeFilter')
+    query('typeFilter')
         .escape()
         .trim()
         .isLength({ max: 25 })
         .withMessage('Post type must not exceed 25 characters.')
         .custom(typeFilter),
-    body('rowFilter')
+    query('rowFilter')
         .escape()
         .trim()
         .notEmpty()
@@ -71,7 +71,7 @@ const filterPostsSchema = [
         .isLength({ max: 10 })
         .withMessage('Row must not exceed 10 characters.')
         .custom(validRow),
-    body('orderFilter')
+    query('orderFilter')
         .escape()
         .trim()
         .notEmpty()
@@ -100,14 +100,14 @@ const editPostSchema = [
         .trim()
         .notEmpty()
         .withMessage('User ID is required.')
-        .isInt()        
+        .isInt()
         .withMessage('User ID must be a number.'),
     body('game_id')
         .escape()
         .trim()
         .notEmpty()
         .withMessage('Game ID is required.')
-        .isInt()        
+        .isInt()
         .withMessage('Game ID must be a number.'),
     body('active')
         .escape()
@@ -139,14 +139,14 @@ const createPostSchema = [
         .trim()
         .notEmpty()
         .withMessage('User ID is required.')
-        .isInt()        
+        .isInt()
         .withMessage('User ID must be a number.'),
     body('game_id')
         .escape()
         .trim()
         .notEmpty()
         .withMessage('Game ID is required.')
-        .isInt()        
+        .isInt()
         .withMessage('Game ID must be a number.')
 ];
 

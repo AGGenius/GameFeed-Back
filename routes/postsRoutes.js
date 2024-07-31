@@ -5,8 +5,8 @@ const { asyncErrorHandler } = require('../middlewares/errors.js');
 const { validate } = require('../middlewares/validation.js');
 const { idParamSchema, filterPostsSchema, editPostSchema, createPostSchema } = require('../validators/posts.js');
 
+router.get('/filter', filterPostsSchema, validate, asyncErrorHandler(postControllers.getPostByFilter));
 router.get('/game/:id', idParamSchema, validate, asyncErrorHandler(postControllers.getPostsByGameId));
-router.post('/filter', filterPostsSchema, validate, asyncErrorHandler(postControllers.getPostByFilter));
 router.get('/:id', idParamSchema, validate, asyncErrorHandler(postControllers.getPostsById));
 router.put('/:id', idParamSchema, editPostSchema, validate, asyncErrorHandler(postControllers.editPostById));
 router.delete('/:id', idParamSchema, validate, asyncErrorHandler(postControllers.deletPostById));
