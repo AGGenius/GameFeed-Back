@@ -5,6 +5,7 @@ const createGame = async (req, res) => {
     const { tittle, genre, developer, release, user_id } = req.body;
 
     const newGame = await client.query(`INSERT INTO games (active, tittle, genre, developer, release, user_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`, [false, tittle, genre, developer, release, user_id]);
+
     createLike(newGame.rows[0].id, 0)
     res.json({ estado: "Juego creado correctamente" });
 }

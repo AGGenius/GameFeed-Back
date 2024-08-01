@@ -76,6 +76,7 @@ const createPost = async (req, res) => {
     const date = getDate();
 
     const newPost = await client.query(`INSERT INTO posts (active, post_type, date, content, user_id, game_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`, [true, post_type, date, content, user_id, game_id]);
+    
     createLike(game_id, newPost.rows[0].id)
     res.json({ estado: "Post creado correctamente" });
 }

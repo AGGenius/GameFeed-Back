@@ -79,8 +79,8 @@ const tittleParamSchema = [
     param('tittle')
         .notEmpty()
         .withMessage(`Tittle is required.`)
-        .isLength({ min: 3, max: 25 })
-        .withMessage('Tittle must be at least 3 characters long, and not exceed 25 characters.')
+        .isLength({ min: 3, max: 50 })
+        .withMessage('Tittle must be at least 3 characters long, and not exceed 50 characters.')
 ];
 
 const newGameBodySchema = [
@@ -89,8 +89,8 @@ const newGameBodySchema = [
         .trim()
         .notEmpty()
         .withMessage('Tittle name is required.')
-        .isLength({ min: 4, max: 25 })
-        .withMessage('Tittle must be at least 4 characters long, and not exceed 25 characters.')
+        .isLength({ min: 4, max: 50 })
+        .withMessage('Tittle must be at least 4 characters long, and not exceed 50 characters.')
         .custom(validTittle),
     body('genre')
         .escape()
@@ -112,8 +112,8 @@ const newGameBodySchema = [
         .trim()
         .notEmpty()
         .withMessage('Date of release is required.')
-        .isDate({ format: "DD-MM-YYYY" })
-        .withMessage('Date of release must be a date format like: DD-MM-YYYY.'),
+        .isDate({ format: "YYYY-MM-DD" })
+        .withMessage('Date of release must be a date format like: YYYY-MM-DD.'),
     body('user_id')
         .escape()
         .trim()
@@ -127,8 +127,8 @@ const editGameSchema = [
         .trim()
         .notEmpty()
         .withMessage('Tittle name is required')
-        .isLength({ min: 4, max: 25 })
-        .withMessage('Tittle must be at least 4 characters long, and not exceed 25 characters.'),
+        .isLength({ min: 4, max: 50 })
+        .withMessage('Tittle must be at least 4 characters long, and not exceed 50 characters.'),
     body('genre')
         .escape()
         .trim()
