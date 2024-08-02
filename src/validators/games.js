@@ -112,7 +112,7 @@ const newGameBodySchema = [
         .trim()
         .notEmpty()
         .withMessage('Date of release is required.')
-        .isDate({ format: "YYYY-MM-DD" })
+        .isDate()
         .withMessage('Date of release must be a date format like: YYYY-MM-DD.'),
     body('user_id')
         .escape()
@@ -149,7 +149,7 @@ const editGameSchema = [
         .trim()
         .notEmpty()
         .withMessage('Date of release is required.')
-        .isDate({ format: "DD-MM-YYYY" })
+        .isDate()
         .withMessage('Date of release must be a date format like: DD-MM-YYYY.'),
     body('user_id')
         .escape()
