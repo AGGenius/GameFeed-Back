@@ -8,7 +8,7 @@ const { idParamSchema, editUserSchema, registerUserSchema, loginUserSchema } = r
 
 router.get('/', asyncErrorHandler(userController.getUsers));
 router.get('/:id', idParamSchema, validate, asyncErrorHandler( userController.getUserByID));
-router.get('/login', loginUserSchema, validate, validLoginData, asyncErrorHandler(userController.loginUser));
+router.post('/login', loginUserSchema, validate, validLoginData, asyncErrorHandler(userController.loginUser));
 router.put('/:id', idParamSchema, editUserSchema, validate, asyncErrorHandler(userController.editUser));
 router.delete('/:id', idParamSchema, validate, asyncErrorHandler(userController.deletUserById));
 router.post('/register', registerUserSchema, validate, asyncErrorHandler(userController.registerUser));

@@ -43,7 +43,7 @@ Las rutas para las peticiones respecto a entradas de videojuegos:
 Las rutas para las peticiones respecto a los usuarios:
 - `GET /` : Devuelve un listado con todos los usuarios en la BD.
 - `GET /:id` : Devuelve un usuario de la BD por su ID recibido en los params de la URL.
-- `GET /login` : Controla el logeo del usuario según parametros recibidos por query y devuelve un jwt si corresponde.
+- `POST /login` : Controla el logeo del usuario según parametros recibidos por body y devuelve un jwt si corresponde.
 - `PUT /:id` : Edita un usuario respecto a su ID en la BD según los parametros recibidos por el body.
 - `DELETE /:id` : Borra la entrada de un usuario de la BD respecto al ID del juego.
 - `POST /register` : Crea un nuevo usuario en la BD según los parametros recibidos por el body.
