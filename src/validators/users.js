@@ -37,8 +37,8 @@ const editUserSchema = [
         .trim()
         .notEmpty()
         .withMessage('Email is required.')
-        .isLength({ min: 4, max: 25 })
-        .withMessage('Email must be at least 4 characters long, and not exceed 25 characters.')
+        .isLength({ min: 4, max: 50 })
+        .withMessage('Email must be at least 4 characters long, and not exceed 50 characters.')
         .isEmail()
         .withMessage('Must be a valid format email.'),
     body('name')
