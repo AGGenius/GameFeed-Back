@@ -2,7 +2,7 @@ const client = require('../db.js');
 const bcryp = require('bcrypt');
 
 const validLoginData = async (req, res, next) => {
-    const { email, password } = req.body;
+    const { email, password } = req.query;
     
     const result = await client.query('SELECT * FROM users WHERE email = $1', [email]);
 
@@ -14,13 +14,13 @@ const validLoginData = async (req, res, next) => {
 
     if (!user.active) {
         return res.status(401).json({ estado: 'Usuario inactivo' });
-    }
+    };
 
     const verifiedUser = await bcryp.compare(password, user.password);
 
     if (!verifiedUser) {
         return res.status(401).json({ estado: 'Credenciales incorrectas' });
-    }
+    };
 
     res.locals.verifiedUser = user;
 	next();

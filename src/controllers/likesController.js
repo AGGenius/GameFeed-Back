@@ -18,11 +18,10 @@ const controlUserLike = async (req, res) => {
 
     const likeCheck = await client.query('SELECT * FROM userslikes WHERE user_id = $1 AND likes_id = $2', [user_id, likes_id]);
 
-
     if (likeCheck.rows.length === 0) {
         await client.query(`INSERT INTO userslikes (active, user_id, likes_id) VALUES ($1, $2, $3)`, [true, user_id, likes_id]);
     } else {
-        await client.query('UPDATE userslikes SET active = $3 WHERE user_id = $1 AND likes_id = $2', [user_id, likes_id, !likeCheck.rows[0].active]); //Updatear en un endpoint post?
+        await client.query('UPDATE userslikes SET active = $3 WHERE user_id = $1 AND likes_id = $2', [user_id, likes_id, !likeCheck.rows[0].active]); 
     }
 
     const actualLikes = await client.query('SELECT * FROM usersLikes WHERE likes_id = $1 AND active = true', [likes_id])

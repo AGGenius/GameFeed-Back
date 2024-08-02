@@ -1,4 +1,4 @@
-const { param, body } = require('express-validator');
+const { param, body, query } = require('express-validator');
 const client = require('../db.js');
 
 const userTypes = [
@@ -107,7 +107,7 @@ const registerUserSchema = [
 ];
 
 const loginUserSchema = [
-    body('email')
+    query('email')
         .escape()
         .trim()
         .notEmpty()
@@ -116,7 +116,7 @@ const loginUserSchema = [
         .withMessage('Email must be at least 4 characters long, and not exceed 50 characters.')
         .isEmail()
         .withMessage('Must be a valid format email.'),
-    body('password')
+    query('password')
         .escape()
         .trim()
         .notEmpty()

@@ -1,3 +1,5 @@
+//Coded by Adrian Giner Gimenez. FullStackWebpage. 02-08-2024. By humans for humans.
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');

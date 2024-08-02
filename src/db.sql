@@ -41,11 +41,3 @@ CREATE TABLE usersLikes (
 	user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
 	likes_id INTEGER REFERENCES likes(id) ON DELETE CASCADE
 )
-
-INSERT INTO users (active, email, password, name, nick, type) VALUES
-('true', 'admin@gamefeed.com', '1234', 'admin', 'allmight', 'admin'),
-('true', 'pome@gamefeed.com', '1234', 'Pomelo', 'Pome', 'user')
-
-INSERT INTO games (tittle, genre, developer, release, user_id) VALUES
-('true', 'Spyro the Dragon', 'adventure', 'Insomniac Games', '1998-09-09', 1),
-('true', 'Stuart Little 2', 'platforms', 'Activision', '2000-01-01', 2)

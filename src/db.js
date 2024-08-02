@@ -15,7 +15,7 @@ client.connect(error => {
         console.log('Connection error', error.stack);
     } else {
         console.log('Connected to database');
-    }
+    };
 });
 
 module.exports = client;

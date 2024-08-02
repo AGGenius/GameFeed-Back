@@ -4,8 +4,8 @@ function asyncErrorHandler(controller) {
         await controller(req, res, next)
       } catch (error) {
         return next(error)
-      }
-    }
+      };
+    };
 };
 
 module.exports = { asyncErrorHandler, }
