@@ -2,9 +2,7 @@ const client = require('../db.js');
 const bcryp = require('bcrypt');
 
 const validLoginData = async (req, res, next) => {
-    const { email, password } = req.query;
-
-    console.log(req.query)
+    const { email, password } = req.body;
     
     const result = await client.query('SELECT * FROM users WHERE email = $1', [email]);
 
