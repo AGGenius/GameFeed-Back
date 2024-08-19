@@ -60,6 +60,19 @@ const getGameByTittle = async (req, res) => {
     }
 };
 
+const getGamesByUserID = async (req, res) => {
+    let { user_id } = req.params;
+    console.log(1)
+    
+    const result = await client.query('SELECT * FROM games WHERE user_id = $1 AND id != 0 AND active = true ORDER BY id', [user_id]);
+
+    if (result.rows.length > 0) {
+        res.json(result.rows);
+    } else {
+        res.json({ estado: "Usuario sin datos." })
+    }
+};
+
 const editGameById = async (req, res) => {
     const { id } = req.params;
     const { tittle, genre, developer, release, user_id, active } = req.body;
@@ -75,4 +88,4 @@ const deletGameById = async (req, res) => {
     res.json({ estado: "Juego borrado correctamente" });
 };
 
-module.exports = { createGame, getGames, getGamesByFilter, getGameById, getGameByTittle, editGameById, deletGameById }
+module.exports = { createGame, getGames, getGamesByFilter, getGameById, getGameByTittle, getGamesByUserID, editGameById, deletGameById }
