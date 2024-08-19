@@ -47,6 +47,18 @@ const getPostsById = async (req, res) => {
     }
 }
 
+const getPostsByUserID = async (req, res) => {
+    let { user_id } = req.params;
+    
+    const result = await client.query('SELECT * FROM posts WHERE user_id = $1 AND active = true AND id != 0 ORDER BY id', [user_id]);
+
+    if (result.rows.length > 0) {
+        res.json(result.rows);
+    } else {
+        res.json({ estado: "Usuario sin datos." })
+    }
+};
+
 const editPostById = async (req, res) => {
     const { id } = req.params;
     const { post_type, content, user_id, game_id, active } = req.body;
@@ -81,4 +93,4 @@ const createPost = async (req, res) => {
     res.json({ estado: "Post creado correctamente" });
 }
 
-module.exports = { createPost, getPostsByGameId, getPostByFilter, getPostsById, editPostById, deletPostById }
+module.exports = { createPost, getPostsByGameId, getPostByFilter, getPostsById, getPostsByUserID, editPostById, deletPostById }
