@@ -62,7 +62,6 @@ const getGameByTittle = async (req, res) => {
 
 const getGamesByUserID = async (req, res) => {
     let { user_id } = req.params;
-    console.log(1)
     
     const result = await client.query('SELECT * FROM games WHERE user_id = $1 AND id != 0 AND active = true ORDER BY id', [user_id]);
 
