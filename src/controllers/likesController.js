@@ -5,6 +5,18 @@ const getLikes = async (req, res) => {
     res.json(result.rows);
 }
 
+const getLikesByUserID = async (req, res) => {
+    let { user_id } = req.params;
+    
+    const result = await client.query('SELECT * FROM userslikes WHERE user_id = $1 AND active = true', [user_id]);
+
+    if (result.rows.length > 0) {
+        res.json(result.rows);
+    } else {
+        res.json({ estado: "Usuario sin datos." })
+    }
+};
+
 const createLike = async (gameId, postId) => {
     try {
         await client.query(`INSERT INTO likes (game_id, post_id, value) VALUES ($1, $2, $3)`, [gameId, postId, 0]);
@@ -32,4 +44,4 @@ const controlUserLike = async (req, res) => {
 }
 
 
-module.exports = { getLikes, createLike, controlUserLike }
+module.exports = { getLikes, getLikesByUserID, createLike, controlUserLike }
