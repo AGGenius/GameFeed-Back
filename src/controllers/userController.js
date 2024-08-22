@@ -31,6 +31,25 @@ const editUser = async (req, res) => {
     res.json({ estado: "Usuario actualizado correctamente" });
 }
 
+const editUserByUser = async (req, res) => {
+    const { id } = req.params;
+    const { email, name, nick, active} = req.body;
+
+    if(res.locals.verifiedUser) {
+
+        if(res.locals.newPasword) {
+            const newSecurePassword = await bcryp.hash(res.locals.newPasword, 10);
+            await client.query('UPDATE users SET email = $2, password = $3, name = $4, nick = $5, active = $6 WHERE id = $1', [id, email, newSecurePassword, name, nick, active]);
+            res.json({ estado: "Usuario actualizado correctamente" });
+        } else {
+            await client.query('UPDATE users SET email = $2, name = $3, nick = $4, active = $5 WHERE id = $1', [id, email, name, nick, active]);
+            res.json({ estado: "Usuario actualizado correctamente" });
+        }
+    } else {
+        res.json({ estado: "Contraseña incorrecta" });
+    }
+}
+
 const deletUserById = async (req, res) => {
     const { id } = req.params;
 
@@ -54,4 +73,4 @@ const loginUser = async (req, res) => {
 }
 
 
-module.exports = { getUsers, getUserByID, loginUser, editUser, deletUserById, registerUser }
+module.exports = { getUsers, getUserByID, loginUser, editUser, editUserByUser, deletUserById, registerUser }
