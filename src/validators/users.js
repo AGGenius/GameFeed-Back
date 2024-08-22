@@ -70,6 +70,90 @@ const editUserSchema = [
         .withMessage('User state must be a boolean value.')
 ];
 
+const editUserSelfSchema = [
+    body('email')
+        .escape()
+        .trim()
+        .notEmpty()
+        .withMessage('Email is required.')
+        .isLength({ min: 4, max: 50 })
+        .withMessage('Email must be at least 4 characters long, and not exceed 50 characters.')
+        .isEmail()
+        .withMessage('Must be a valid format email.'),
+    body('name')
+        .escape()
+        .trim()
+        .notEmpty()
+        .withMessage('Name is required.')
+        .isLength({ min: 2, max: 25 })
+        .withMessage('Name must be at least 2 characters long, and not exceed 25 characters.'),
+    body('nick')
+        .escape()
+        .trim()
+        .notEmpty()
+        .withMessage('Nick is required.')
+        .isLength({ min: 2, max: 25 })
+        .withMessage('Nick must be at least 2 characters long, and not exceed 25 characters.'),
+    body('active')
+        .escape()
+        .trim()
+        .notEmpty()
+        .withMessage('The state is required.')
+        .isBoolean()
+        .withMessage('User state must be a boolean value.')
+];
+
+const editUserSelfPassfSchema = [
+    body('email')
+        .escape()
+        .trim()
+        .notEmpty()
+        .withMessage('Email is required.')
+        .isLength({ min: 4, max: 50 })
+        .withMessage('Email must be at least 4 characters long, and not exceed 50 characters.')
+        .isEmail()
+        .withMessage('Must be a valid format email.'),
+    body('name')
+        .escape()
+        .trim()
+        .notEmpty()
+        .withMessage('Name is required.')
+        .isLength({ min: 2, max: 25 })
+        .withMessage('Name must be at least 2 characters long, and not exceed 25 characters.'),
+    body('nick')
+        .escape()
+        .trim()
+        .notEmpty()
+        .withMessage('Nick is required.')
+        .isLength({ min: 2, max: 25 })
+        .withMessage('Nick must be at least 2 characters long, and not exceed 25 characters.'),
+    body('pass1')
+        .escape()
+        .trim()
+        .notEmpty()
+        .withMessage('Password is required.')
+        .isLength({ max: 25 })
+        .withMessage('Name must not exceed 25 characters.')
+        .isStrongPassword()
+        .withMessage("Password must contain at least 1 lowercase, uppercase, number and symbol, with al least 8 characters."),
+    body('pass2')
+        .escape()
+        .trim()
+        .notEmpty()
+        .withMessage('Password is required.')
+        .isLength({ max: 25 })
+        .withMessage('Name must not exceed 25 characters.')
+        .isStrongPassword()
+        .withMessage("Password must contain at least 1 lowercase, uppercase, number and symbol, with al least 8 characters."),
+    body('active')
+        .escape()
+        .trim()
+        .notEmpty()
+        .withMessage('The state is required.')
+        .isBoolean()
+        .withMessage('User state must be a boolean value.')
+];
+
 const registerUserSchema = [
     body('email')
         .escape()
@@ -128,6 +212,8 @@ const loginUserSchema = [
 module.exports = {
     idParamSchema,
     editUserSchema,
+    editUserSelfSchema,
+    editUserSelfPassfSchema,
     registerUserSchema,
     loginUserSchema
 }
