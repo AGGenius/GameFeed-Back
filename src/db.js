@@ -1,14 +1,13 @@
+const { Client} = require('pg');
 require('dotenv').config();
 
-const { neon } = require('@neondatabase/serverless');
+const client = new Client({
+  connectionString: process.env.DATABASE_UR,
+  ssl: true
+});
 
-const { PGHOST, PGDATABASE, PGUSER, PGPASSWORD } = process.env;
+client.connect()
+  .then(() => console.log('Conexión exitosa'))
+  .catch(err => console.error('Error de conexión', err.stack));
 
-const sql = neon(`postgresql://${PGUSER}:${PGPASSWORD}@${PGHOST}/${PGDATABASE}?sslmode=require`);
-
-async function getPgVersion() {
-  const result = await sql`SELECT version()`;
-  console.log(result[0]);
-}
-
-module.exports = getPgVersion;
+module.exports = client;
